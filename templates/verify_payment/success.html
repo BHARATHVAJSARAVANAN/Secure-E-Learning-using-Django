@@ -1,0 +1,114 @@
+{% extends 'base.html' %}
+{% block title %}Payment Successful{% endblock title %}
+{% load static %}
+{% load course_tags %}	
+{% block content %}
+
+    <!-- SHOP ORDER COMPLETED
+    ================================================== -->
+    <div class="container py-8 py-lg-11">
+        <div class="row">
+            <div class="col-xl-8 mx-xl-auto">
+                <img src="{% static 'assets/img/success.png' %}" alt="" style="width: 80px;" class="img-fluid mx-auto d-block">
+                <header class="entry-header">
+                    <h1 class="entry-title">Order received</h1>
+                </header>
+
+                <div class="entry-content">
+                    <div class="woocommerce">
+                        <div class="woocommerce-order">
+                            <p class="woocommerce-notice woocommerce-notice--success woocommerce-thankyou-order-received">Thank you. Your order has been received.</p>
+
+                            <ul class="woocommerce-order-overview woocommerce-thankyou-order-details order_details">
+                                <li class="woocommerce-order-overview__order order">
+                                    Order number:
+                                    <strong>{{payment.order_id}}</strong>
+                                </li>
+
+                                <li class="woocommerce-order-overview__date date">
+                                    Date:
+                                    <strong>{{payment.date}}</strong>
+                                </li>
+
+                                <li class="woocommerce-order-overview__total total">
+                                    {% discount_calculation payment.course.price payment.course.discount as discounted_price %}
+                                    Total:
+                                    <strong><span class="woocommerce-Price-amount amount"><span class="woocommerce-Price-currencySymbol">₹</span>{{discounted_price}}</span></strong>
+                                </li>
+
+                                <li class="woocommerce-order-overview__payment-method method">
+                                    Payment method:
+                                    <strong>Online payments</strong>
+                                </li>
+                            </ul>
+
+                            <section class="woocommerce-order-details">
+                                <h2 class="woocommerce-order-details__title">Order details</h2>
+                                <table class="woocommerce-table woocommerce-table--order-details shop_table order_details">
+                                    <thead>
+                                        <tr>
+                                            <th class="woocommerce-table__product-name product-name">Product</th>
+                                            <th class="woocommerce-table__product-table product-total">Total</th>
+                                        </tr>
+                                    </thead>
+
+                                    <tbody>
+                                        <tr class="woocommerce-table__line-item order_item">
+                                            <td class="woocommerce-table__product-name product-name">
+                                                <a href="#">{{payment.course.title}}</a>
+                                            </td>
+
+                                            <td class="woocommerce-table__product-total product-total">
+                                                <span class="woocommerce-Price-amount amount"><span class="woocommerce-Price-currencySymbol">₹</span>{{discounted_price}}</span>
+                                            </td>
+                                        </tr>
+
+                                    </tbody>
+
+                                    <tfoot>
+                                        <tr>
+                                            <th scope="row">Payment method:</th>
+                                            <td>Online payments</td>
+                                        </tr>
+                                        <tr>
+                                            <th scope="row">Total:</th>
+                                            <td><span class="woocommerce-Price-amount amount"><span class="woocommerce-Price-currencySymbol">₹</span>{{discounted_price}}</span></td>
+                                        </tr>
+                                    </tfoot>
+                                </table>
+                            </section>
+
+                            <section class="woocommerce-customer-details">
+                                <h2 class="woocommerce-column__title">Billing address</h2>
+                                <address>
+                                    {{payment.user.first_name}} {{payment.user.last_name}}<br>{{payment.user.address_1}}<br>{{payment.user.address_2}}<br>{{payment.user.city}}<br>{{payment.user.postcode}}<br>{{payment.user.country}}
+                                    <p class="woocommerce-customer-details--phone">{{payment.user.phone}}</p>
+                                    <p class="woocommerce-customer-details--email">{{payment.user.email}}</p>
+                                </address>
+                            </section>
+                        </div>
+                    </div>
+                </div>
+                <nav aria-label="breadcrumb">
+                    <ol class="breadcrumb breadcrumb-scroll justify-content-center">
+                        <li class="breadcrumb-item">
+                            <a class="text-gray-800" href="{% url 'home' %}">
+                                Home
+                            </a>
+                        </li>
+                        <li class="breadcrumb-item">
+                            <a class="text-gray-800" href="{% url 'my_course' %}">
+                                My Course
+                            </a>
+                        </li>
+                    </ol>
+                </nav>
+            </div>
+        </div>
+    </div>
+
+    <!-- /////////////////////////////////////////////// -->
+
+    
+{% endblock content %}
+    

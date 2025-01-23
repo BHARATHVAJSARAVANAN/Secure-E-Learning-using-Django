@@ -1,0 +1,179 @@
+{% extends 'base.html' %}
+{% block title %}Course Recommendations{% endblock title %}
+{% load static %}
+{% load course_tags %}
+
+{% block content %}
+
+<header class="py-8 py-md-11" style="background-image: none;">
+    <div class="container text-center py-xl-2">
+        <h1 class="display-4 fw-semi-bold mb-0">Numitech, in association with Coursera, provides course recommendations.</h1>
+        <nav aria-label="breadcrumb">
+            <ol class="breadcrumb breadcrumb-scroll justify-content-center">
+                <li class="breadcrumb-item">
+                    <a class="text-gray-800" href="{% url 'home' %}">
+                        Home
+                    </a>
+                </li>
+                <li class="breadcrumb-item">
+                    <a class="text-gray-800" href="{% url 'single_course' %}">
+                        NumiTech Course
+                    </a>
+                </li>
+            </ol>
+        </nav>
+    </div>
+    <!-- Img -->
+    <img class="d-none img-fluid" src="...html" alt="...">
+</header>
+
+
+{% comment %} <div class="section no-pad-bot" id="index-banner">
+    <div class="container">
+        <br><br>
+        <h1 class="header center orange-text">Courses Recommender</h1>
+        <div class="row center">
+            <h5 class="header col s12 light">Coursera Courses Recommender<br></h5>
+        </div>
+
+        <div class="row">
+            <form action="{% url 'recommend_courses' %}" method="POST" class="col s12">
+                {% csrf_token %}
+                <div class="row">
+                    <div class="input-field col s12 m6 l4">
+                        <label for="course"><b>Search Courses</b></label>
+                        <input placeholder="Type course name to get recommendations" name="course" id="course" type="text" class="validate">
+                    </div>
+                </div>
+
+                <div class="row center">
+                    <button type="submit" class="btn-large waves-effect waves-light orange">Search Courses</button>
+                </div>
+            </form>
+        </div>
+
+        <br>
+        <h4><b>{{ message }}</b></h4>
+        <br>
+        <div>{{ pred|safe }}</div>
+    </div>
+</div> {% endcomment %}
+
+<div class="container mt-5">
+    <!-- Search Form -->
+    <form method="GET" action="{% url 'recommendations' %}">
+        <div class="form-group row">
+            <div class="col-md-10">
+                <input type="text" name="course_title" class="form-control" placeholder="Search for a course by title to get recommendations" value="{{ request.GET.course_title }}">
+            </div>
+            <div class="col-md-2">
+                <button type="submit" class="btn btn-primary btn-block">Search</button>
+            </div>
+        </div>
+    </form>
+    <br>
+    <div class="container text-center py-xl-2">
+        <h4> Our advanced algorithms analyze your interests and skills to suggest the best courses from Coursera’s extensive catalog. Whether you're looking to enhance your career, explore new fields, or deepen your knowledge, our recommendations help you find the perfect program to achieve your objectives. Start discovering courses that align with your aspirations today!</h4>
+    </div>
+    <br>
+
+    {% comment %} <h3>Search Results</h3> {% endcomment %}
+
+    <!-- Display Recommendations or Paginated Results -->
+    {% if resource and not page_obj %}
+        <div class="container text-center py-xl-2">
+            <h3>Course Recommendations</h3>
+        </div>
+        {% if message %}
+            <div class="alert alert-info">{{ message }}</div>
+        {% endif %}
+        <table class="table table-bordered">
+            <thead>
+                <tr>
+                    <th><b>Title</b></th>
+                    <th><b>Organization</b></th>
+                    <th><b>Duration</b></th>
+                    <th><b>Rating</b></th>
+                    <th><b>Students Enrolled</b></th>
+                    <th><b>Description</b></th>
+                    <th><b>Course URL</b></th>
+                
+                </tr>
+            </thead>
+            <tbody>
+                {% for course in resource %}
+                <tr>
+                    <td>{{ course.course_title }}</td>
+                    <td>{{ course.course_organization }}</td>
+                    <td>{{ course.course_time }}</td>
+                    <td>{{ course.course_rating }}</td>
+                    <td>{{ course.course_students_enrolled }}</td>
+                    <td>{{ course.course_description }}</td>
+                    <td><a href="{{ course.course_url }}" target="_blank">Course Link</a></td>
+                </tr>
+                {% endfor %}
+            </tbody>
+        </table>
+    {% comment %} {% elif page_obj %}
+        <h3>Search Results</h3> {% endcomment %}
+        {% comment %} <table class="table table-bordered">
+            <thead>
+                <tr>
+                    <th>Title</th>
+                    <th>Organization</th>
+                    <th>Duration</th>
+                    <th>Rating</th>
+                    <th>Students Enrolled</th>
+                    <th>Summary</th>
+                </tr>
+            </thead>
+            <tbody>
+                {% for resource in page_obj %}
+                <tr>
+                    <td>{{ resource.course_title }}</td>
+                    <td>{{ resource.course_organization }}</td>
+                    <td>{{ resource.course_time }}</td>
+                    <td>{{ resource.course_rating }}</td>
+                    <td>{{ resource.course_students_enrolled }}</td>
+                    <td>{{ resource.course_summary }}</td>
+                </tr>
+                {% endfor %}
+            </tbody>
+        </table> {% endcomment %}
+
+        {% comment %} <!-- Pagination Controls -->
+        <nav aria-label="Page navigation">
+            <ul class="pagination justify-content-center">
+                {% if page_obj.has_previous %}
+                    <li class="page-item"><a class="page-link" href="?page=1">&laquo; First</a></li>
+                    <li class="page-item"><a class="page-link" href="?page={{ page_obj.previous_page_number }}">Previous</a></li>
+                {% else %}
+                    <li class="page-item disabled"><a class="page-link">&laquo; First</a></li>
+                    <li class="page-item disabled"><a class="page-link">Previous</a></li>
+                {% endif %}
+                
+                {% for i in page_obj.paginator.page_range %}
+                    {% if page_obj.number == i %}
+                        <li class="page-item active"><a class="page-link">{{ i }}</a></li>
+                    {% else %}
+                        <li class="page-item"><a class="page-link" href="?page={{ i }}">{{ i }}</a></li>
+                    {% endif %}
+                {% endfor %}
+                
+                {% if page_obj.has_next %}
+                    <li class="page-item"><a class="page-link" href="?page={{ page_obj.next_page_number }}">Next</a></li>
+                    <li class="page-item"><a class="page-link" href="?page={{ page_obj.paginator.num_pages }}">Last &raquo;</a></li>
+                {% else %}
+                    <li class="page-item disabled"><a class="page-link">Next</a></li>
+                    <li class="page-item disabled"><a class="page-link">Last &raquo;</a></li>
+                {% endif %}
+            </ul>
+        </nav> {% endcomment %}
+    {% else %}
+        {% if message %}
+            <div class="alert alert-info">{{ message }}</div>
+        {% endif %}
+    {% endif %}
+</div>
+
+{% endblock content %}
